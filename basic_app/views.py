@@ -124,11 +124,12 @@ def add_auction(request):
             return render(request,'basic_app/add_auction.html',{'aaf':form})
 
 def make_bid(request):
-    auction = Auction(request.POST)
-    form = AddAuctionForm(request.GET)
-    form.is_valid()
-    print(form)
+
+    form = request.POST['bid_price']
+    id = request.POST['auction_id']
+#    auction = Auction.objects.get(id)
+    print(id)
 
 
 
-    return render(request,'basic_app/make_bid.html',{'a':auction})
+    return render(request,'basic_app/make_bid.html',{'aaf':form})

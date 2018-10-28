@@ -15,14 +15,24 @@
           <th>Description</th>
           <th>Price</th>
           <th>Close time</th>
+          <th>Bid</th>
         </thead>
 
         {% for a in auctions %}
         <tr>
-          <td><a href="{% url 'basic_app:make_bid' %}">{{ a.title}}</a></td>
+
+          <td>{{ a.title}}</td>
           <td>{{ a.description}}</td>
           <td>{{ a.bid_price}}</td>
           <td>{{ a.due_date}}</td>
+          <td>
+            <form action="/basic_app/auctions/bid/" method="post">
+              {% csrf_token %}
+              <input type="hidden" name="auction_id" value="{{a.id}}">
+              <input type="hidden" name="auction_price" value="{{a.bid_price}}">
+              <input type="submit" value="Bid">
+            </form>
+          </td>
         </tr>
         {% endfor %}
       </table>
