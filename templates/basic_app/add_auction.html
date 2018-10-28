@@ -1,0 +1,22 @@
+{% extends "basic_app/base.html" %}
+{% load staticfiles %}
+
+{% block body_block %}
+  <div class="container">
+    <div class="jumbotron">
+
+        <h1>Fill in these details to add an auction:</h1>
+
+        <form enctype="multipart/form-data" method="POST">
+          {% csrf_token %}
+          {{ aaf.as_p }}
+          <p>Example time format: 2018-10-28 23:59:59</p>
+          <input type="submit" name="" value="Add auction">
+        </form>
+
+
+    </div>
+
+  </div>
+
+{% endblock %}

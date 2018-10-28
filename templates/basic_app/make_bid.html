@@ -1,0 +1,28 @@
+{% extends "basic_app/base.html" %}
+{% block body_block %}
+
+<div class="container">
+  <div class="jumbotron">
+
+    <h1>Selected auction:</h1>
+    <p>Make a bid here.</p>
+    <div class="whatwhat">
+      <table>
+        <thead>
+          <th>Title</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Close time</th>
+        </thead>
+
+        <tr>
+          <td><a href="{% url 'basic_app:make_bid' %}">{{ a.title}}</a></td>
+          <td>{{ a.description}}</td>
+          <td>{{ a.bid_price}}</td>
+          <td>{{ a.due_date}}</td>
+        </tr>
+      </table>
+  </div>
+</div>
+
+{% endblock %}

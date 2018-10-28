@@ -1,0 +1,24 @@
+{% extends "basic_app/base.html" %}
+{% load staticfiles %}
+
+{% block body_block %}
+  <div cass="container">
+    <h2>Profile details:</h2>
+
+    <div class="jumbotron">
+
+
+      <h2>Username:</h2>
+      <p>{{ user.username }}</p>
+      <h2>Current name:</h2>
+      <p>{{ user.first_name }} {{user.last_name }}</p>
+      <h2>Current email:</h2>
+      <p>{{ user.email }}</p>
+
+      <a href="{% url 'basic_app:edit_profile' %}"><input type="button" name="" value="Edit profile"></a>
+
+    </div>
+
+  </div>
+
+{% endblock %}
