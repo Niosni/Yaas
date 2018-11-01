@@ -27,7 +27,9 @@ SECRET_KEY = 'jn(7uy)0l%th7gb)8pgnm44m-%0bw==4+e$2lbs5mqi94bp!q@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["sixstreem.pythonanywhere.com"]
+LOGIN_URL = '/basic_app/user_login'
+
+ALLOWED_HOSTS = []
 
 
 # Application definition

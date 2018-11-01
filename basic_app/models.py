@@ -13,8 +13,7 @@ class UserProfileInfo(models.Model):
 class Auction(models.Model):
     title = models.CharField(max_length=128)
     description = models.CharField(max_length=128)
-    orig_price = models.DecimalField(max_digits=6, decimal_places=2, default=None)
-    bid_price = models.DecimalField(max_digits=6, decimal_places=2, default=None)
+    price = models.DecimalField(max_digits=6, decimal_places=2, default=None)
     due_date = models.DateTimeField()
     author = models.CharField(max_length=128)
     bidder = models.CharField(max_length=128,blank=True)

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from basic_app.forms import UserForm, EditProfileForm, AddAuctionForm
+from basic_app.forms import UserForm,EditProfileForm,AddAuctionForm,EditAuctionForm,SearchAuctionsForm
 from basic_app.models import Auction
 
 # Extra Imports for the Login and Logout Capabilities
@@ -14,10 +14,6 @@ from django.contrib.auth import update_session_auth_hash
 def index(request):
     return render(request,'basic_app/index.html')
 
-def auctions(request):
-    auctions_list = Auction.objects.order_by('title')
-    auct_dict = {'auctions':auctions_list}
-    return render(request,'basic_app/auctions.html',context=auct_dict)
 
 @login_required
 def user_logout(request):
@@ -103,8 +99,8 @@ def change_password(request):
         form = PasswordChangeForm(data=request.POST,user=request.user)
 
         if form.is_valid():
-            form.save()
-            update_session_auth_hash(request,form.user)
+            uusjuttu = form.save()
+            update_session_auth_hash(request,uusjuttu.user)
             return render(request, 'basic_app/profile.html')
         else:
             print("Not successful pw change")
@@ -114,22 +110,59 @@ def change_password(request):
         args = {'form':form}
         return render(request,'basic_app/change_password.html',args)
 
+def auctions(request):
+    auctions_list = Auction.objects.order_by('title')
+    searchForm = SearchAuctionsForm()
+    auct_dict = {'auctions':auctions_list,'searchForm':searchForm}
+    return render(request,'basic_app/auctions.html',context=auct_dict)
+
+
 def add_auction(request):
         form = AddAuctionForm(request.POST)
         if form.is_valid():
             form.save()
-            return render(request,'basic_app/index.html',{'aaf':form})
+            return redirect('basic_app:auctions')
         else:
             print('NOT WORKING')
             return render(request,'basic_app/add_auction.html',{'aaf':form})
 
-def make_bid(request):
 
-    form = request.POST['bid_price']
+def edit_auction(request,id):
+
+    print(id,'testi')
+
+    if request.method == 'GET':
+        a = Auction.objects.get(id=id)
+        return render(request,'basic_app/edit_auction.html',{'description':a.description})
+
+    if request.method == 'POST':
+        a = Auction.objects.get(id=id)
+        print(a.description)
+        a.description = request.POST['description']
+        a.save()
+        all_auctions = Auction.objects.all()
+        args={
+            'message':'Auction ' + str(id) + " desc edited",
+            'auctions':all_auctions
+            }
+        return render(request,'basic_app/auctions.html',args)
+
+def searchAuctions(request):
+    title = request.POST['title']
+    print(title)
+    if request.method == 'POST':
+        results = Auction.objects.filter(title__contains=title)
+        print(results)
+        return render(request,'basic_app/auctions.html',{'auctions':results})
+
+def make_bid(request):
     id = request.POST['auction_id']
-#    auction = Auction.objects.get(id)
+    #auction = Auction.objects.get(id)
     print(id)
 
 
+    auctions_list = Auction.objects.order_by('title')
+    auct_dict = {'auctions':auctions_list}
+    return render(request,'basic_app/auctions.html',context=auct_dict)
 
-    return render(request,'basic_app/make_bid.html',{'aaf':form})
+    return render(request,'basic_app/make_bid.html',context=auct_dict)

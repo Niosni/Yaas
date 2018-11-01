@@ -4,34 +4,53 @@
 <div class="container">
   <div class="jumbotron">
 
-    <a class="navbar-link" href="{% url 'basic_app:add_auction' %}">Add a auction here</a>
+    <a class="btn btn-info" href="{% url 'basic_app:add_auction' %}">Add a auction here</a>
     <h1>All the auctions:</h1>
-    <p>Here list all auctions.</p>
-    <div class="whatwhat">
+    <div class="">
+      {% if message %}
+      {{message}}
+      {% endif %}
+      <p>Search by title:</p>
+      <form class="" action="/basic_app/auctions/search/" method="POST">
+
+        {% csrf_token %}
+        <input type="text" name="title" value="">
+        <input class="btn btn-dark" type="submit" value="Search">
+      </form>
+
+
       {% if auctions %}
-      <table>
-        <thead>
+      <table class="table">
+        <thead class="thead-dark">
           <th>Title</th>
           <th>Description</th>
           <th>Price</th>
           <th>Close time</th>
           <th>Bid</th>
+          <th>Edit</th>
         </thead>
 
         {% for a in auctions %}
         <tr>
-
           <td>{{ a.title}}</td>
           <td>{{ a.description}}</td>
-          <td>{{ a.bid_price}}</td>
+          <td>{{ a.price}}</td>
           <td>{{ a.due_date}}</td>
           <td>
             <form action="/basic_app/auctions/bid/" method="post">
               {% csrf_token %}
               <input type="hidden" name="auction_id" value="{{a.id}}">
               <input type="hidden" name="auction_price" value="{{a.bid_price}}">
-              <input type="submit" value="Bid">
+              <input class="btn btn-success" type="submit" value="Bid">
             </form>
+          </td>
+          <td>
+            {% if a.author == user.get_username %}
+            <form action="/basic_app/auctions/edit/{{a.id}}" method="GET">
+
+                <input class="btn btn-primary" type="submit" value="Edit">
+            </form>
+            {% endif %}
           </td>
         </tr>
         {% endfor %}

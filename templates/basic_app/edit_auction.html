@@ -1,0 +1,18 @@
+{% extends "basic_app/base.html" %}
+{% block body_block %}
+
+<div class="container">
+  <div class="jumbotron">
+
+  <h1>Edit the auction description:</h1>
+    <div class="">
+      <form method="post">
+          {% csrf_token %}
+          <input type="Textarea" name="description" value="{{ description}}">
+          <input class="btn btn-primary" type="submit" value="Edit">
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
