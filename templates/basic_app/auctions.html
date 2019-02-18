@@ -24,8 +24,9 @@
         <thead class="thead-dark">
           <th>Title</th>
           <th>Description</th>
-          <th>Price</th>
           <th>Close time</th>
+          <th>Price</th>
+          <th>Bidder</th>
           <th>Bid</th>
           <th>Edit</th>
         </thead>
@@ -34,8 +35,9 @@
         <tr>
           <td>{{ a.title}}</td>
           <td>{{ a.description}}</td>
-          <td>{{ a.price}}</td>
           <td>{{ a.due_date}}</td>
+          <td>{{ a.price}}</td>
+          <td>{{ a.bidder}}</td>
           <td>
             <form action="/basic_app/auctions/bid/" method="post">
               {% csrf_token %}

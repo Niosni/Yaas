@@ -3,21 +3,15 @@
 
 <div class="container">
   <div class="jumbotron">
+        <h2>Item you're bidding for:  {{ auction.title }}  has the current price of 
+        {{auction.price}}</h2>
 
-    <h1>Selected auction:</h1>
-    <p>Make a bid here.</p>
-    <div class="whatwhat">
-      <table class="table">
-        <thead>
-        </thead>
-        <p>{{ aaf.title }}</p>
-        <tr>
-          <td><a href="{% url 'basic_app:make_bid' %}">{{ a.title}}</a></td>
-          <td>{{ b }}</td>
-          <td>{{ aaf.bid_price}}</td>
-          <td>{{ aaf.due_date}}</td>
-        </tr>
-      </table>
+        <form action="{% url 'basic_app:confirm_bid' %}"method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="id" value="{{ auction.id }}">
+          <input type="number" name="bid_price" value="{{ auction.price }}" step="0.01" min="{{ auction.price }}">
+          <input class="btn btn-primary" type="submit" value="Make bid">
+        </form>
   </div>
 </div>
 
