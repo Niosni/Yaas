@@ -153,7 +153,7 @@ def make_bid(request):
     if request.method == 'POST':
         id = request.POST['auction_id']
         auction = Auction.objects.get(id=id)
-        print(auction)
+        print(auction.price)
        # auction.price = float(auction.price) + float(0.01)
         auct_dict = {'auction': auction}
         # return render(request, 'basic_app/auctions.html', context=auct_dict)
@@ -166,6 +166,8 @@ def confirm_bid(request):
     id = request.POST['id']
     a = Auction.objects.get(id=id)
     a.price = request.POST['bid_price']
+    print(request.user)
+    a.bidder = request.user.username
     a.save()
 
     print(request.POST['id'])
