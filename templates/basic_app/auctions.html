@@ -39,20 +39,19 @@
           <td>{{ a.price}}</td>
           <td>{{ a.bidder}}</td>
           <td>
-            {% if a.bidder != user.get_username and a.author != user.get_username %}
-              <form action="/basic_app/auctions/bid/" method="post">
-                {% csrf_token %}
-                <input type="hidden" name="auction_id" value="{{a.id}}">
-                <input type="hidden" name="auction_price" value="{{a.bid_price}}">
-                <input class="btn btn-success" type="submit" value="Bid">
-              </form>
+              {% if user.is_authenticated and a.bidder != user.get_username and a.author != user.get_username %}
+                <form action="/basic_app/auctions/bid/" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="auction_id" value="{{a.id}}">
+                  <input type="hidden" name="auction_price" value="{{a.bid_price}}">
+                  <input class="btn btn-success" type="submit" value="Bid">
+                </form>
             {% else %}
               <input class="btn btn-secondary" type="button" value="Bid">
             {% endif %}
-            
           </td>
           <td>
-            {% if a.author == user.get_username %}
+            {% if user.is_authenticated and a.author == user.get_username %}
             <form action="/basic_app/auctions/edit/{{a.id}}" method="GET">
 
                 <input class="btn btn-primary" type="submit" value="Edit">
