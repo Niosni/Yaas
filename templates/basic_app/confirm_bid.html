@@ -1,0 +1,22 @@
+{% extends "basic_app/base.html" %}
+{% block body_block %}
+
+<div class="container">
+  <div class="jumbotron">
+        <h2>
+            Current description:
+        </h2>
+        <p>{{ auction.description }}</p>
+
+        Price you're bidding: 
+          {{bid_price}}
+        <form action="{% url 'basic_app:save_bid' %}"method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="id" value="{{ auction.id }}">
+          <input type="hidden" name="bid_price" value="{{ bid_price }}">
+          <input class="btn btn-primary" type="submit" value="Confirm bid">
+        </form>
+  </div>
+</div>
+
+{% endblock %}

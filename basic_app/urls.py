@@ -17,5 +17,6 @@ urlpatterns = [
     path('auctions/add/', views.add_auction, name='add_auction'),
     path('auctions/bid/', views.make_bid, name='make_bid'),
     path('auctions/bid/confirm', views.confirm_bid, name='confirm_bid'),
+    path('auctions/bid/save', views.save_bid, name='save_bid'),
     path('auctions/edit/<int:id>', views.edit_auction, name='edit_auction'),
 ]

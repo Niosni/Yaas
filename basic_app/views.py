@@ -149,29 +149,38 @@ def add_auction(request):
         return render(request, 'basic_app/add_auction.html', {'aaf': form})
 
 
+def save_bid(request):
+    if request.method == 'POST':
+        id = request.POST['id']
+        a = Auction.objects.get(id=id)
+        a.price = request.POST['bid_price']
+        a.bidder = request.user.username
+        a.save()
+        return redirect('basic_app:auctions')
+
+
+def confirm_bid(request):
+
+    if request.method == 'POST':
+        id = request.POST['id']
+        bid_price = request.POST['bid_price']
+        auction = Auction.objects.get(id=id)
+        auct_dict = {'auction': auction, 'bid_price': bid_price}
+        return render(request, 'basic_app/confirm_bid.html', context=auct_dict)
+
+
 def make_bid(request):
+
     if request.method == 'POST':
         id = request.POST['auction_id']
         auction = Auction.objects.get(id=id)
         print(auction.price)
-       # auction.price = float(auction.price) + float(0.01)
+        # Minimum of 1 cent of bidding
+        auction.price = round((float(str(auction.price)) + float(0.01)), 2)
         auct_dict = {'auction': auction}
         # return render(request, 'basic_app/auctions.html', context=auct_dict)
 
         return render(request, 'basic_app/make_bid.html', context=auct_dict)
-
-
-def confirm_bid(request):
-    # if request.method == 'POST':
-    id = request.POST['id']
-    a = Auction.objects.get(id=id)
-    a.price = request.POST['bid_price']
-    print(request.user)
-    a.bidder = request.user.username
-    a.save()
-
-    print(request.POST['id'])
-    return redirect('basic_app:auctions')
 
 
 def edit_auction(request, id):
