@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
 from basic_app.forms import UserForm, EditProfileForm, AddAuctionForm, EditAuctionForm, SearchAuctionsForm
 from basic_app.models import Auction
-
+from basic_app.models import User
 # Extra Imports for the Login and Logout Capabilities
 from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-
+from django.core.mail import send_mail
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
 
@@ -119,9 +119,10 @@ def change_password(request):
 
 
 def auctions(request):
-    auctions_list = Auction.objects.order_by('title')
+    auctions_list = Auction.objects.order_by('title').filter(state='Active')
     searchForm = SearchAuctionsForm()
     auct_dict = {'auctions': auctions_list, 'searchForm': searchForm}
+
     return render(request, 'basic_app/auctions.html', context=auct_dict)
 
 
@@ -153,10 +154,58 @@ def save_bid(request):
     if request.method == 'POST':
         id = request.POST['id']
         a = Auction.objects.get(id=id)
+        old_bidder_email = ""
+        if a.bidder:
+            old_bidder_name = a.bidder
+            old_bidder_email = User.objects.get(username=old_bidder_name).email
+
         a.price = request.POST['bid_price']
         a.bidder = request.user.username
         a.save()
+        notify_bid(a, old_bidder_email)
         return redirect('basic_app:auctions')
+
+
+def ban_auction(request):
+    if request.method == 'POST':
+        id = request.POST['auction_id']
+        a = Auction.objects.get(id=id)
+        if a.state == 'Banned':
+            a.state = 'Active'
+        else:
+            a.state = 'Banned'
+            author = User.objects.get(username=a.author).email
+            if a.bidder:
+                bidder = User.objects.get(username=a.bidder).email
+            else:
+                bidder = ''
+            send_mail(
+                'Auction has been banned',
+                'Against our terms',
+                'no-reply@yet-another-auction-site.com',
+                [author, bidder]
+            )
+        a.save()
+    return redirect('basic_app:auctions')
+
+
+def notify_bid(auction, old_bidder):
+    seller = auction.author
+    if auction.bidder != old_bidder:
+        send_mail(
+            'Someone bid higher than you!',
+            'Someone has bid higher you in ' + auction.title,
+            'no-reply@yet-another-auction-site.com',
+            [old_bidder],
+            fail_silently=False,
+        )
+    send_mail(
+        'Your item has a new bid!',
+        'Your item ' + auction.title + 'has a new bid of ' + auction.price,
+        'no-reply@yet-another-auction-site.com',
+        [seller],
+        fail_silently=False,
+    )
 
 
 def confirm_bid(request):
@@ -211,3 +260,11 @@ def searchAuctions(request):
         results = Auction.objects.filter(title__contains=title)
         print(results)
         return render(request, 'basic_app/auctions.html', {'auctions': results})
+
+
+def show_banned(request):
+    if request.user.is_superuser:
+        banned = Auction.objects.filter(state='Banned')
+        return render(request, 'basic_app/auctions.html', {'auctions': banned})
+    else:
+        return redirect('basic_app:auctions')

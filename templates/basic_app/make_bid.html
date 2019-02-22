@@ -3,7 +3,7 @@
 
 <div class="container">
   <div class="jumbotron">
-        <h2>Item you're bidding for:  {{ auction.title }}  has the current price of 
+        <h2>Item you're bidding for:  {{ auction.title }}  has the minimum bidding price price of 
         {{auction.price}}</h2>
 
         <form action="{% url 'basic_app:confirm_bid' %}"method="POST">

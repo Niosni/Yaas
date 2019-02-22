@@ -26,39 +26,67 @@
           <th>Description</th>
           <th>Close time</th>
           <th>Price</th>
+          <th>Seller</th>
           <th>Bidder</th>
           <th>Bid</th>
           <th>Edit</th>
+          {% if request.user.is_superuser %}
+            <th> 
+              <a class="btn btn-warning" href="{% url 'basic_app:show_banned' %}">Show banned</a>
+            </th>
+          {% endif %}
         </thead>
 
         {% for a in auctions %}
-        <tr>
-          <td>{{ a.title}}</td>
-          <td>{{ a.description}}</td>
-          <td>{{ a.due_date}}</td>
-          <td>{{ a.price}}</td>
-          <td>{{ a.bidder}}</td>
-          <td>
-              {% if user.is_authenticated and a.bidder != user.get_username and a.author != user.get_username %}
-                <form action="/basic_app/auctions/bid/" method="post">
-                  {% csrf_token %}
-                  <input type="hidden" name="auction_id" value="{{a.id}}">
-                  <input type="hidden" name="auction_price" value="{{a.bid_price}}">
-                  <input class="btn btn-success" type="submit" value="Bid">
-                </form>
-            {% else %}
-              <input class="btn btn-secondary" type="button" value="Bid">
-            {% endif %}
-          </td>
-          <td>
-            {% if user.is_authenticated and a.author == user.get_username %}
-            <form action="/basic_app/auctions/edit/{{a.id}}" method="GET">
+            <tr>
+              <td>{{ a.title}}</td>
+              <td>{{ a.description}}</td>
+              <td>{{ a.due_date}}</td>
+              <td>{{ a.price}}</td>
+              <td>{{ a.author }}</td>
+              <td>{{ a.bidder}}</td>
+              <td>
+                  {% if user.is_authenticated and a.bidder != user.get_username and a.author != user.get_username %}
+                    <form action="/basic_app/auctions/bid/" method="post">
+                      {% csrf_token %}
+                      <input type="hidden" name="auction_id" value="{{a.id}}">
+                      <input type="hidden" name="auction_price" value="{{a.bid_price}}">
+                      <input class="btn btn-success" type="submit" value="Bid">
+                    </form>
+                {% else %}
+                  <input class="btn btn-secondary" type="button" value="Bid">
+                {% endif %}
+              </td>
+              <td>
+                {% if user.is_authenticated and a.author == user.get_username %}
+                <form action="/basic_app/auctions/edit/{{a.id}}" method="GET">
 
-                <input class="btn btn-primary" type="submit" value="Edit">
-            </form>
-            {% endif %}
-          </td>
-        </tr>
+                    <input class="btn btn-primary" type="submit" value="Edit">
+                </form>
+                {% endif %}
+              </td>
+              <!-- Enable banning auctions for superusers.-->
+              {% if request.user.is_superuser %}
+                <td>
+                  {% if a.state == 'Banned' %}
+                    <form action="/basic_app/auctions/ban/" method="post">
+                      {% csrf_token %}
+                      <input type="hidden" name="auction_id" value="{{a.id}}">
+                      <input class="btn btn-warning" type="submit" value="Unban">
+                    </form>
+                  {% else %}
+                    <form action="/basic_app/auctions/ban/" method="post">
+                      {% csrf_token %}
+                      <input type="hidden" name="auction_id" value="{{a.id}}">
+                      <input class="btn btn-danger" type="submit" value="Ban">
+                    </form>
+                  {% endif %}
+                </td>
+              {% else %}
+
+              {% endif %}
+
+            </tr>
         {% endfor %}
       </table>
       {% else %}

@@ -19,4 +19,6 @@ urlpatterns = [
     path('auctions/bid/confirm', views.confirm_bid, name='confirm_bid'),
     path('auctions/bid/save', views.save_bid, name='save_bid'),
     path('auctions/edit/<int:id>', views.edit_auction, name='edit_auction'),
+    path('auctions/ban/', views.ban_auction, name='ban_auction'),
+    path('auctions/banned/', views.show_banned, name='show_banned'),
 ]
