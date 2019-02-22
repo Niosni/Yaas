@@ -29,7 +29,7 @@ DEBUG = True
 
 LOGIN_URL = '/basic_app/user_login'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['sixstreem.pythonanywhere.com']
 
 
 # Application definition
