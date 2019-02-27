@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+from django.utils.translation import ugettext_lazy as _
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -30,7 +31,7 @@ DEBUG = True
 LOGIN_URL = '/basic_app/user_login'
 
 ALLOWED_HOSTS = ['sixstreem.pythonanywhere.com',
-                 '127.0.0.0']
+                 '127.0.0.1']
 
 
 # Application definition
@@ -53,6 +54,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'user_language_middleware.UserLanguageMiddleware',
 ]
 
 ROOT_URLCONF = 'YAAS.urls'
@@ -116,7 +119,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 
 TIME_ZONE = 'UTC'
 
@@ -127,6 +130,10 @@ USE_L10N = True
 USE_TZ = True
 
 
+LANGUAGES = (
+    ('en', _('English')),
+    ('fi', _('Finnish')),
+)
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
@@ -147,3 +154,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'yetanotherauctionsite@gmail.com'
 EMAIL_HOST_PASSWORD = 'Yaasyaas1'
+
+LOCALE_PATHS = (
+    os.path.join(BASE_DIR, 'locale'),
+)

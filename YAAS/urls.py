@@ -21,8 +21,9 @@ from django.urls import path, include
 from basic_app import views
 
 urlpatterns = [
-    path('',views.index,name='index'),
+    path('', views.index, name='index'),
     path('admin/', admin.site.urls),
-    path('basic_app/',include('basic_app.urls')),
+    path('basic_app/', include('basic_app.urls')),
     path('logout/', views.user_logout, name='logout'),
+    path('i18n/', include('django.conf.urls.i18n')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
