@@ -35,6 +35,7 @@ def register(request):
         if user_form.is_valid():
             user = user_form.save()
             user.set_password(user.password)
+            user.language = 'en'
             user.save()
 
             registered = True
