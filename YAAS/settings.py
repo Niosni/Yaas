@@ -55,7 +55,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.locale.LocaleMiddleware',
-    'user_language_middleware.UserLanguageMiddleware',
+    # 'user_language_middleware.UserLanguageMiddleware',
 ]
 
 ROOT_URLCONF = 'YAAS.urls'
