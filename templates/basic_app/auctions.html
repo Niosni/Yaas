@@ -25,7 +25,9 @@
           <th>Title</th>
           <th>Description</th>
           <th>Close time</th>
-          <th>Price</th>
+          <th><a class="btn btn-info" href="{% url 'basic_app:change_currency' %}">
+            Price {{ currency }}
+          </a></th>
           <th>Seller</th>
           <th>Bidder</th>
           <th>Bid</th>
@@ -42,7 +44,11 @@
               <td>{{ a.title}}</td>
               <td>{{ a.description}}</td>
               <td>{{ a.due_date}}</td>
-              <td>{{ a.price}}</td>
+              {% if eur_to_usd %}
+                <td>{{ a.price }}</td>
+              {% else %}
+                <td>{{ a.price }}</td>
+              {% endif %}
               <td>{{ a.author }}</td>
               <td>{{ a.bidder}}</td>
               <td>

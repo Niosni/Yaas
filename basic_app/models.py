@@ -7,6 +7,7 @@ from django.conf import settings
 class UserProfileInfo(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    language = models.CharField(max_length=4)
 
     def __str__(self):
         return self.user.username

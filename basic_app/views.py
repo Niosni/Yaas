@@ -10,7 +10,10 @@ from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.contrib.auth.forms import UserChangeForm, PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash
+import urllib.request
 
+import requests
+import json
 API_URL = "https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=EUR&to_currency=USD&apikey=N5W66DMTP80L3027"
 
 
@@ -124,8 +127,10 @@ def change_password(request):
 def auctions(request):
     auctions_list = Auction.objects.order_by('title').filter(state='Active')
     searchForm = SearchAuctionsForm()
-    auct_dict = {'auctions': auctions_list, 'searchForm': searchForm}
-
+    currency = "€"
+    auct_dict = {'auctions': auctions_list,
+                 'searchForm': searchForm,
+                 'currency': currency}
     return render(request, 'basic_app/auctions.html', context=auct_dict)
 
 
@@ -275,5 +280,21 @@ def show_banned(request):
 
 
 def change_currency(request):
-    response = requests.get(API_URL)
-    print(response)
+    response = requests.get(API_URL).json()
+
+    eur_to_usd = response['Realtime Currency Exchange Rate']['5. Exchange Rate']
+
+    print(eur_to_usd)
+
+    auctions_list = Auction.objects.order_by('title').filter(state='Active')
+
+    for auction in auctions_list:
+        auction.price = float(auction.price) * float(eur_to_usd)
+
+    searchForm = SearchAuctionsForm()
+    currency = "$"
+    auct_dict = {'auctions': auctions_list,
+                 'searchForm': searchForm,
+                 'currency': currency}
+
+    return render(request, 'basic_app/auctions.html', context=auct_dict)

@@ -21,4 +21,6 @@ urlpatterns = [
     path('auctions/edit/<int:id>', views.edit_auction, name='edit_auction'),
     path('auctions/ban/', views.ban_auction, name='ban_auction'),
     path('auctions/banned/', views.show_banned, name='show_banned'),
+    path('auctions/change_currency/',
+         views.change_currency, name='change_currency'),
 ]

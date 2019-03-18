@@ -7,9 +7,8 @@ class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())
 
     class Meta():
-        model = User
-        fields = ('first_name', 'last_name', 'username',
-                  'email', 'password', )
+        model = UserProfileInfo
+        fields = ('language',)
 
 
 class EditProfileForm(forms.ModelForm):
